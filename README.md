@@ -1,6 +1,6 @@
 ## TODO:
-## Student Name:
-## Student ID: 
+## Student Name: Javeria Alam
+## Student ID: 218714451
 
 # Meeting Slot Suggestion Lab Repository
 
