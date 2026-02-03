@@ -1,10 +1,178 @@
-## Student Name:
-## Student ID: 
+## Student Name: Javeria Alam
+## Student ID: 218714451
 
-Prompt 1: "Copy paste your question"
-LLM Response 1: "Copy paste LLMs response"
+Prompt 1: "
+
+"""
+Stub file for the meeting slot suggestion exercise.
+
+Implement the function `suggest_slots` to return a list of valid meeting start times
+on a given day, taking into account working hours, and possible specific constraints. See the lab handout
+for full requirements.
+"""
+from typing import List, Dict
+
+def suggest_slots(
+    events: List[Dict[str, str]],
+    meeting_duration: int,
+    day: str
+) -> List[str]:
+    """
+    Suggest possible meeting start times for a given day.
+
+    Args:
+        events: List of dicts with keys {"start": "HH:MM", "end": "HH:MM"}
+        meeting_duration: Desired meeting length in minutes
+        day: Three-letter day abbreviation (e.g., "Mon", "Tue", ... "Fri")
+
+    Returns:
+        List of valid start times as "HH:MM" sorted ascending
+    """
+    # TODO: Implement this function
+    raise NotImplementedError("suggest_slots function has not been implemented yet")
+
+
+System Description
+You are asked to implement a Python function that suggests possible meeting time slots for a given day. The function takes as input a list of existing calendar events for that day and a desired meeting duration. Its goal is to return a list of valid start times at which the meeting could be scheduled. A valid time slot should respect typical working hours and should not conflict with existing events. If no suitable time slots are available, the function should return an empty list. You may assume that time values are provided in a standard string format (e.g., “09:30”), and you are free to choose an appropriate internal representation. You may use ChatGPT to assist with reasoning about the problem, generating code, or writing tests.
+
+can you give 10 functional requirements, 6 constraints/assumptions relevant to the problem and any special rules or exceptions (any other constraints you can think of)"
+LLM Response 1: "Sure! Here’s a clean, structured breakdown you can use for the lab write-up or design discussion.
+
+---
+
+## ✅ Functional Requirements (10)
+
+1. **Input handling**
+   The function shall accept a list of existing events, a meeting duration (in minutes), and a day identifier.
+
+2. **Working hours enforcement**
+   The function shall only suggest meeting start times that fall within defined working hours for the given day.
+
+3. **Conflict avoidance**
+   The function shall not suggest any time slot that overlaps (partially or fully) with an existing event.
+
+4. **Exact duration fit**
+   Each suggested start time must allow the full meeting duration to fit without exceeding working hours.
+
+5. **Day-specific behavior**
+   The function shall respect the provided day parameter (e.g., Mon–Fri) when determining valid slots.
+
+6. **Granularity of suggestions**
+   The function shall return start times aligned to a fixed time granularity (e.g., 15-minute or 30-minute increments).
+
+7. **Sorted output**
+   The function shall return suggested start times in ascending chronological order.
+
+8. **Empty availability handling**
+   If no valid slots are available, the function shall return an empty list.
+
+9. **Event order independence**
+   The function shall work correctly regardless of the order in which events are provided.
+
+10. **String-formatted output**
+    The function shall return all suggested start times in `"HH:MM"` string format.
+
+---
+
+## 📌 Constraints / Assumptions (6)
+
+1. **Single-day scope**
+   All events provided occur on the same day specified by the `day` parameter.
+
+2. **Valid time formats**
+   Event start and end times are assumed to be valid `"HH:MM"` strings using a 24-hour clock.
+
+3. **Non-overlapping events**
+   Existing events are assumed not to overlap with each other.
+
+4. **Positive meeting duration**
+   The meeting duration is assumed to be a positive integer greater than zero.
+
+5. **Fixed working hours**
+   Working hours are predefined and consistent (e.g., 09:00–17:00) unless stated otherwise.
+
+6. **Weekday focus**
+   Only weekdays (Mon–Fri) are considered valid; weekends may be ignored or treated as unavailable.
+
+---
+
+## ⚠️ Special Rules / Exceptions / Additional Considerations
+
+* **Boundary conditions**
+  A meeting may start exactly when another event ends, but not when one starts.
+
+* **Edge-of-day handling**
+  A meeting cannot extend past the end of working hours, even by one minute.
+
+* **Zero events case**
+  If no events are scheduled for the day, the entire working window should be considered available.
+
+* **Minimum slot size**
+  If the meeting duration is longer than the total available working hours, no slots should be returned.
+
+* **Invalid day input**
+  If the `day` value is not recognized, the function may return an empty list or raise an error (implementation choice).
+
+* **Time normalization**
+  Internally, times may be converted to minutes since midnight to simplify comparisons, but outputs must remain formatted strings.
+
+---
+
+If you want, I can also:
+
+* turn this into a **requirements table**,
+* align it with a **specific lab handout**, or
+* help you derive **test cases** directly from these requirements.
+"
 
 --------------------------------------------------
-Prompt 2: "Copy paste your question"
-LLM Response 2: "Copy paste LLMs response"
+Prompt 2: "can u list 3 invariants that must always hold, 2 negative requirements (must not occur) and tie breaking rules too"
+LLM Response 2: "Yep — here’s a tight, lab-ready set that fits naturally with the earlier requirements.
+
+---
+
+## 🔒 Invariants (Must Always Hold)
+
+1. **No-overlap invariant**
+   Every suggested meeting slot must *not overlap* with any existing event on that day.
+
+2. **Working-hours invariant**
+   Every suggested start time must fall within working hours *and* allow the full meeting duration to complete within those hours.
+
+3. **Chronological consistency invariant**
+   The returned list of start times must always be strictly ordered from earliest to latest, with no duplicates.
+
+---
+
+## 🚫 Negative Requirements (Must NOT Occur)
+
+1. **No conflicting suggestions**
+   The function must **not** suggest a start time where any portion of the meeting overlaps an existing event.
+
+2. **No invalid time outputs**
+   The function must **not** return malformed, out-of-range, or non–`"HH:MM"` formatted time strings.
+
+---
+
+## ⚖️ Tie-Breaking Rules
+
+These apply when multiple valid slots are possible:
+
+1. **Earliest-first rule**
+   Prefer earlier start times over later ones when generating or selecting slots.
+
+2. **Uniform granularity rule**
+   If multiple start times fall within the same free interval, choose those aligned to the defined time granularity (e.g., every 15 minutes), discarding non-aligned times.
+
+3. **Deterministic output rule**
+   Given the same inputs, the function must always return the same ordered list of slots (no randomness or dependency on input event order).
+
+---
+
+If you want, I can also:
+
+* map these invariants to **assertions** in code,
+* show how they drive **test case design**, or
+* help you justify them in a **design rationale section** for the lab.
+"
 --------------------------------------------------
